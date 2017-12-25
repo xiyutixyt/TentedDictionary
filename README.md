@@ -177,3 +177,77 @@ inv __hello, true<br>
 (?:__)hello<br>
 msg hi<br>
 这时, 发送__hello会反馈一些东西<br>
+
+## 对象操作
+v1.3的对象操作详解<br>
+<br>
+支持的类标识:<br>
+    json -> org.json.JSONObject<br>
+    string -> java.lang.String<br>
+    class -> java.lang.Class<br>
+<br>
+支持的值标识:<br>
+    Integer -> int.class<br>
+    Long -> long.class<br>
+    String -> java.lang.String<br>
+    Class -> java.lang.Class<br>
+<br>
+    如果不是上面规定的值标识, 将把传入的标识当作类路径查找(Class.forName)<br>
+<br>
+指令:<br>
+    new 存放的变量名, 类标识[, 构造参数...]<br>
+        用构建参数实例化类标识代表的类<br>
+        并将对象存放到变量里<br>
+    mtd 存放的变量名, 方法所在的类(值标识), 方法名[, 值标识...]<br>
+        获取指定类中的指定方法<br>
+        存放到变量里<br>
+    fun 存放的变量名, mtd对象名, 使用的对象的名称[, 参数的名称...]<br>
+        调用指定的方法<br>
+        存放到变量里<br>
+<br>
+实例:<br>
+    解析json<br>
+    实例化一个json对象<br>
+    new jsonObj, json, {"code":200}<br>
+    要获取的数据的名称<br>
+    new index, string, code<br>
+    获取指定方法<br>
+    mtd method_get, org.json.JSONObject, get, String<br>
+    执行方法<br>
+    fun result, method_get, jsonObj, index<br>
+    输出<br>
+    msg $result<br>
+<br>
+    输出结果将会是200<br>
+<br>
+    使用集合(非常麻烦, 不过可以存其他对象<br>
+        //子词条, 用于添加对象(需使用inv指令, 并且变量池传递为true<br>
+        arrayList::add<br>
+        获取添加值的方法<br>
+        mtd add, java.util.ArrayList, add, java.lang.Object<br>
+        调用<br>
+        fun _, add, list, addObj<br>
+<br>
+        //子词条, 用于创建集合, 需求同上<br>
+        arrayList::new<br>
+        获取ArrayList的class对象<br>
+        new listClass, class, java.util.ArrayList<br>
+        获取newInstance方法(调用午餐构造器<br>
+        mtd new, Class, newInstance<br>
+        执行方法<br>
+        fun list, new, listClass<br>
+<br>
+        //主词条<br>
+        list<br>
+        调用 创建集合<br>
+        inv arrayList::new, true<br>
+        放置需要添加的值<br>
+        set addObj, 123<br>
+        调用 添加值<br>
+        inv arrayList::add, true<br>
+        输出<br>
+        msg $list<br>
+<br>
+        输出结果应该是[123]<br>
+
+
